@@ -2,66 +2,41 @@
 <html>
 <head>
     <title>Geocoding service</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <link href="main.css" media="all" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <div id="error"><h1>Server is down</h1></div>
-<div id="content" class="container">
-    <div class="row">
-        <div class="col-md-8">
-            video frame
+<div class="container" style="max-width: 1200px">
+    <div class="row" style="margin-top: 25px">
+        <div class="seven columns">
+            <h2>Table</h2>
+            <div>video</div>
         </div>
-        <div class="col-md-4">
-            <h3>Select a car</h3>
-            <button type="button" id="car-red" class="btn btn-danger btn-lg" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Red
-            </button>
-            <button type="button" id="car-green" class="btn btn-success btn-lg" data-toggle="button" aria-pressed="false" autocomplete="off">
-                Green
-            </button>
-            <h3>Car control</h3>
-            <div id="buttons" class="container">
-                <div class="row button-row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-info btn-block">
-                            <span class="glyphicon glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-                <div class="row button-row">
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-info btn-block">
-                            <span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-info btn-block">
-                            <span class="glyphicon glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-info btn-block">
-                            <span class="glyphicon glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                        </button>
-                    </div>
-                </div>
+        <div class="five columns">
+            <h2>Control</h2>
+            <h5>Please select a car</h5>
+            <button id="car-red" class="red-button">Red</button>
+            <button id="car-green" class="green-button">Green</button>
+            <h5>Control your car</h5>
+            <div class="row">
+                <button id="move-stop" class="button-primary">Stop</button>
+                <button id="move-up" class="button-primary">Up</button>
             </div>
-            <h3>Speed</h3>
-            <input id="speed" value="50" />
+            <div class="row">
+                <button id="move-left" class="button-primary">Left</button>
+                <button id="move-down" class="button-primary">Down</button>
+                <button id="move-right" class="button-primary">Right</button>
+            </div>
+            <h5>Speed of the car</h5>
+            <input type="range" min="0" max="250" value="120" id="speed" />
         </div>
     </div>
 </div>
-
-<script src="jquery-3.1.0.min.js"></script>
-<script src="bootstrap.min.js"></script>
-<script src="main.js"></script>
+<script src="js/jquery-3.1.0.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

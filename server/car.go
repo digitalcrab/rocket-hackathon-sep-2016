@@ -23,6 +23,8 @@ func (c *car) send(cmd WsCommand) {
 
 	for i := range cmd.Directions {
 		switch cmd.Directions[i] {
+		case "stop":
+			direction = 0
 		case "up":
 			direction += DriveForward
 		case "down":

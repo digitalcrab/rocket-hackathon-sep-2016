@@ -1,0 +1,46 @@
+#error {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	display: none;
+}
+
+#error h1 {
+	padding: 0;
+	margin: 0 auto;
+	text-align: center;
+	background-color: red;
+	border-bottom: 2px solid brown;
+}
+
+.red-button {
+    background-color: #FF4136;
+    border-color: #85144b;
+    color: #FFF;
+}
+
+.red-button.selected {
+    background-color: #B40A01;
+    border-color: #85144b;
+    color: #000;
+}
+
+.green-button {
+    background-color: #2ECC40;
+    border-color: #3D9970;
+    color: #FFF;
+}
+
+.green-button.selected {
+    background-color: #009512;
+    border-color: #3D9970;
+    color: #000;
+}
+
+.button-primary.selected {
+    background-color: #039FD3;
+}
