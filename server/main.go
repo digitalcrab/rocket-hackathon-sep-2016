@@ -16,7 +16,7 @@ var (
 	listenAddr   = flag.String("listen", ":8080", "Listen on address")
 	staticFolder = flag.String("staticPath", "static", "Path to static folder")
 	redDevice    = flag.String("redDevice", "/dev/cu.usbmodem1411", "Red Car USB device")
-	greenDevice  = flag.String("greenDevice", "/dev/cu.usbmodem1411", "Green Car USB device")
+	greenDevice  = flag.String("greenDevice", "/dev/cu.wchusbserial1420", "Green Car USB device")
 
 	upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
@@ -72,6 +72,7 @@ func main() {
 		"static": *staticFolder,
 	}).Debugln("Starting application...")
 
+	// Red Car port
 	redConfig := &serial.Config{
 		Name:        *redDevice,
 		Baud:        9600,
@@ -84,8 +85,25 @@ func main() {
 	}
 	defer redPort.Close()
 
+	// Green Car port
+	greenConfig := &serial.Config{
+		Name:        *greenDevice,
+		Baud:        9600,
+		ReadTimeout: time.Second * 5,
+	}
+
+	greenPort, greenErr := serial.OpenPort(greenConfig)
+	if greenErr != nil {
+		logrus.WithError(greenErr).Fatalln("Unable to open a USB for green car")
+	}
+	defer redPort.Close()
+
 	hub.cars["red"] = &car{
 		port: redPort,
+	}
+
+	hub.cars["green"] = &car{
+		port: greenPort,
 	}
 
 	go hub.run()

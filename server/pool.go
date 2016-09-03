@@ -28,9 +28,9 @@ func (p *pool) run() {
 
 		case m := <-p.broadcast:
 			logrus.WithFields(logrus.Fields{
-				"car":       m.Car,
-				"speed":     m.Speed,
-				"direction": m.Direction,
+				"car":        m.Car,
+				"speed":      m.Speed,
+				"directions": m.Directions,
 			}).Debugln("Broadcast message received")
 
 			if car, ok := p.cars[m.Car]; ok {

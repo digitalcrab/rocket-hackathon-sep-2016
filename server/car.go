@@ -21,15 +21,17 @@ type (
 func (c *car) send(cmd WsCommand) {
 	var direction byte
 
-	switch cmd.Direction {
-	case "up":
-		direction = DriveForward
-	case "down":
-		direction = DriveBackward
-	case "left":
-		direction = DriveLeft
-	case "right":
-		direction = DriveRight
+	for i := range cmd.Directions {
+		switch cmd.Directions[i] {
+		case "up":
+			direction += DriveForward
+		case "down":
+			direction += DriveBackward
+		case "left":
+			direction += DriveLeft
+		case "right":
+			direction += DriveRight
+		}
 	}
 
 	msg := []byte{direction, cmd.Speed}

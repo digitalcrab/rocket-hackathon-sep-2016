@@ -1,21 +1,35 @@
 
 function init() {
-	$(document).keydown(function(e) {
-        switch (e.keyCode) {
-            case 38: // up
-                moveUp();
-            break;
-            case 40: // down
-                moveDown();
-            break;
-            case 37: // left
-                moveLeft();
-            break;
-            case 39: // right
-                moveRight();
-            break;
+    var pressedKeys = {},
+        keysMap = {
+            37: "left",
+            38: "up",
+            39: "right",
+            40: "down"
+        };
+
+    $(document).keydown(function (e) {
+        var k = e.keyCode;
+        if (k == 37 || k == 38 || k == 39 || k == 40) {
+            pressedKeys[k] = true;
+            triggerMovement()
         }
     });
+
+    $(document).keyup(function (e) {
+        var k = e.keyCode;
+        if (k == 37 || k == 38 || k == 39 || k == 40) {
+            delete pressedKeys[k];
+        }
+    });
+
+    function triggerMovement() {
+        var keys = [];
+        $.each(pressedKeys, function(key) {
+            keys.push(keysMap[key])
+        })
+        move(keys);
+    }
 
     console.log($('#car-red'));
 
@@ -69,28 +83,12 @@ function init() {
 	    console.log(car);
 	}
 
-	function moveUp() {
-	    move('up');
-	}
-
-	function moveDown() {
-	    move('down')
-	}
-
-	function moveLeft() {
-	    move('left');
-	}
-
-	function moveRight() {
-	    move('right');
-	}
-
-    function move(direction) {
+    function move(directions) {
         var speed = $('#speed').val(),
           data = JSON.stringify({
             car: car,
             speed: parseInt(speed, 10),
-            direction: direction
+            directions: directions
         });
         console.log(data);
         ws.send(data);
