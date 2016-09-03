@@ -1,0 +1,7 @@
+# IDE
+/.idea
+/rockethack.iml
+
+# Binary
+/server-mac
+/server-linux

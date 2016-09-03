@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geocoding service</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link href="main.css" media="all" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="error"><h1>Server is down</h1></div>
+<div id="content" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            video frame
+        </div>
+        <div class="col-md-4">
+            <h3>Select a car</h3>
+            <button type="button" id="car-red" class="btn btn-danger btn-lg" data-toggle="button" aria-pressed="false" autocomplete="off">
+                Red
+            </button>
+            <button type="button" id="car-green" class="btn btn-success btn-lg" data-toggle="button" aria-pressed="false" autocomplete="off">
+                Green
+            </button>
+            <h3>Car control</h3>
+            <div id="buttons" class="container">
+                <div class="row button-row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-info btn-block">
+                            <span class="glyphicon glyphicon glyphicon-triangle-top" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+                <div class="row button-row">
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-info btn-block">
+                            <span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-info btn-block">
+                            <span class="glyphicon glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-info btn-block">
+                            <span class="glyphicon glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <h3>Speed</h3>
+            <input id="speed" value="50" />
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="main.js"></script>
+</body>
+</html>
