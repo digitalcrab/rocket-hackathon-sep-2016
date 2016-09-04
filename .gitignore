@@ -3,5 +3,5 @@
 /rockethack.iml
 
 # Binary
-/server-mac
-/server-linux
+/mjpeg-server
+/game-server

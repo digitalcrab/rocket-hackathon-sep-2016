@@ -13,7 +13,7 @@ import (
 
 var (
 	logLevel     = flag.String("log", "debug", "Logs level")
-	listenAddr   = flag.String("listen", ":8080", "Listen on address")
+	listenAddr   = flag.String("listen", ":8081", "Listen on address")
 	staticFolder = flag.String("staticPath", "static", "Path to static folder")
 	redDevice    = flag.String("redDevice", "/dev/cu.usbmodem1411", "Red Car USB device")
 	greenDevice  = flag.String("greenDevice", "/dev/cu.wchusbserial1420", "Green Car USB device")
