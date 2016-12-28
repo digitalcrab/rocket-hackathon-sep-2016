@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/tarm/serial"
+	"math"
 )
 
 const (
@@ -16,9 +17,15 @@ type (
 	car struct {
 		port *serial.Port
 	}
+
+	cmd struct {
+		Car        string   `json:"car"`
+		Speed      byte     `json:"speed"`
+		Directions []string `json:"directions"`
+	}
 )
 
-func (c *car) send(cmd WsCommand) {
+func (c *car) send(cmd cmd) {
 	var direction byte
 
 	for i := range cmd.Directions {
@@ -38,7 +45,7 @@ func (c *car) send(cmd WsCommand) {
 
 	msg := []byte{direction, cmd.Speed}
 
-	logrus.WithField("msg", msg).Infoln("Sending to arduino...")
+	logrus.WithField("msg", msg).Infoln("Sending to arduino")
 
 	if _, err := c.port.Write(msg); err != nil {
 		logrus.WithError(err).Errorln("Error on send message")

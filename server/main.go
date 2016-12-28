@@ -13,10 +13,10 @@ import (
 
 var (
 	logLevel     = flag.String("log", "debug", "Logs level")
-	listenAddr   = flag.String("listen", ":8081", "Listen on address")
+	listenAddr   = flag.String("listen", ":8080", "Listen on address")
 	staticFolder = flag.String("staticPath", "static", "Path to static folder")
-	redDevice    = flag.String("redDevice", "/dev/cu.usbmodem1411", "Red Car USB device")
-	greenDevice  = flag.String("greenDevice", "/dev/cu.wchusbserial1420", "Green Car USB device")
+	device1      = flag.String("device1", "", "Car USB device 1 (red)")
+	device2      = flag.String("device2", "/dev/cu.usbmodem1421", "Car USB device 2 (green)")
 
 	upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
@@ -27,7 +27,7 @@ var (
 	}
 
 	hub = pool{
-		broadcast:   make(chan WsCommand),
+		commands:    make(chan cmd),
 		register:    make(chan *connection),
 		unregister:  make(chan *connection),
 		connections: make(map[*connection]bool),
@@ -58,6 +58,29 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	c.reader()
 }
 
+func prepareCar(device, name string) {
+	if "" == device {
+		return
+	}
+
+	cfg := &serial.Config{
+		Name:        device,
+		Baud:        9600,
+		ReadTimeout: time.Second * 5,
+	}
+
+	port, err := serial.OpenPort(cfg)
+	if err != nil {
+		logrus.WithError(err).Fatalf("Unable to open a USB %q\n", device)
+	}
+
+	hub.cars[name] = &car{
+		port: port,
+	}
+
+	logrus.WithField("device", device).Debugln("Opening device")
+}
+
 func main() {
 	flag.Parse()
 
@@ -72,39 +95,14 @@ func main() {
 		"static": *staticFolder,
 	}).Debugln("Starting application...")
 
-	// Red Car port
-	redConfig := &serial.Config{
-		Name:        *redDevice,
-		Baud:        9600,
-		ReadTimeout: time.Second * 5,
-	}
+	prepareCar(*device1, "red")
+	prepareCar(*device2, "green")
 
-	redPort, redErr := serial.OpenPort(redConfig)
-	if redErr != nil {
-		logrus.WithError(redErr).Fatalln("Unable to open a USB for red car")
-	}
-	defer redPort.Close()
-
-	// Green Car port
-	greenConfig := &serial.Config{
-		Name:        *greenDevice,
-		Baud:        9600,
-		ReadTimeout: time.Second * 5,
-	}
-
-	greenPort, greenErr := serial.OpenPort(greenConfig)
-	if greenErr != nil {
-		logrus.WithError(greenErr).Fatalln("Unable to open a USB for green car")
-	}
-	defer redPort.Close()
-
-	hub.cars["red"] = &car{
-		port: redPort,
-	}
-
-	hub.cars["green"] = &car{
-		port: greenPort,
-	}
+	defer func() {
+		for _, car := range hub.cars {
+			car.port.Close()
+		}
+	}()
 
 	go hub.run()
 

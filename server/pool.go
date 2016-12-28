@@ -5,7 +5,7 @@ import "github.com/Sirupsen/logrus"
 type (
 	pool struct {
 		connections map[*connection]bool
-		broadcast   chan WsCommand
+		commands    chan cmd
 		register    chan *connection
 		unregister  chan *connection
 		cars        map[string]*car
@@ -26,32 +26,16 @@ func (p *pool) run() {
 				logrus.WithField("ip", c.ip).Debugln("Client removed")
 			}
 
-		case m := <-p.broadcast:
+		case m := <-p.commands:
 			logrus.WithFields(logrus.Fields{
 				"car":        m.Car,
 				"speed":      m.Speed,
 				"directions": m.Directions,
-			}).Debugln("Broadcast message received")
+			}).Debugln("Command received")
 
 			if car, ok := p.cars[m.Car]; ok {
 				car.send(m)
 			}
-
-			/*
-				for c := range p.connections {
-					select {
-					case c.send <- m:
-					default:
-						logrus.WithFields(logrus.Fields{
-							"ip":  c.ip,
-							"msg": string(m),
-						}).Errorln("Error on write to web socket")
-
-						close(c.send)
-						delete(p.connections, c)
-					}
-				}
-			*/
 		}
 	}
 }

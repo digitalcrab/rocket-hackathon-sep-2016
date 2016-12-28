@@ -49,12 +49,12 @@ func (c *connection) reader() {
 		message = bytes.TrimSpace(bytes.Replace(message, []byte{'\n'}, []byte{' '}, -1))
 		logrus.WithField("msg", string(message)).Infoln("Message reseived")
 
-		var wsMsg WsCommand
-		err = json.Unmarshal(message, &wsMsg)
+		var wsCmd cmd
+		err = json.Unmarshal(message, &wsCmd)
 		if err != nil {
 			logrus.WithError(err).Errorln("Unable to Unmarshal message")
 		} else {
-			c.hub.broadcast <- wsMsg
+			c.hub.commands <- wsCmd
 		}
 	}
 }

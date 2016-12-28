@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"github.com/Sirupsen/logrus"
 	"github.com/tylerb/graceful"
@@ -10,12 +11,11 @@ import (
 	"os"
 	"os/exec"
 	"time"
-	"bytes"
 )
 
 var (
 	logLevel   = flag.String("log", "debug", "Logs level")
-	listenAddr = flag.String("listen", ":8082", "Listen on address")
+	listenAddr = flag.String("listen", ":8088", "Listen on address")
 	stream     = NewStream()
 )
 
@@ -99,12 +99,12 @@ func runFF() {
 	}
 }
 
-func scanImages(data []byte, atEOF bool) (advance int, token []byte, err error) {
+func scanImages(data []byte, atEOF bool) (int, []byte, error) {
 	if atEOF && len(data) == 0 {
 		return 0, nil, nil
 	}
 	if i := bytes.Index(data, []byte{255, 217}); i >= 0 {
-		return i + 2, data[0:i + 2], nil
+		return i + 2, data[0 : i+2], nil
 	}
 	if atEOF {
 		return len(data), data, nil
