@@ -1,0 +1,13 @@
+.red-button {
+    background-color: #FF4136;
+    border-color: #85144b;
+    color: #FFF;
+}
+.green-button {
+    background-color: #2ECC40;
+    border-color: #3D9970;
+    color: #FFF;
+}
+.button-primary.selected {
+    background-color: #039FD3;
+}

@@ -12,11 +12,8 @@ import (
 )
 
 var (
-	logLevel     = flag.String("log", "debug", "Logs level")
-	listenAddr   = flag.String("listen", ":8080", "Listen on address")
-	staticFolder = flag.String("staticPath", "static", "Path to static folder")
-	device1      = flag.String("device1", "", "Car USB device 1 (red)")
-	device2      = flag.String("device2", "/dev/cu.usbmodem1421", "Car USB device 2 (green)")
+	device1 = flag.String("device1", "", "Car USB device 1 (red)")
+	device2 = flag.String("device2", "/dev/cu.usbmodem1421", "Car USB device 2 (green)")
 
 	upgrader = websocket.Upgrader{
 		ReadBufferSize:  1024,
@@ -84,16 +81,8 @@ func prepareCar(device, name string) {
 func main() {
 	flag.Parse()
 
-	lvl, err := logrus.ParseLevel(*logLevel)
-	if err != nil {
-		lvl = logrus.DebugLevel
-	}
-
-	logrus.SetLevel(lvl)
-	logrus.WithFields(logrus.Fields{
-		"listen": *listenAddr,
-		"static": *staticFolder,
-	}).Debugln("Starting application...")
+	logrus.SetLevel(logrus.DebugLevel)
+	logrus.Debugln("Starting application 127.0.0.1:8080")
 
 	prepareCar(*device1, "red")
 	prepareCar(*device2, "green")
@@ -107,7 +96,7 @@ func main() {
 	go hub.run()
 
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir(*staticFolder)))
+	mux.Handle("/", http.FileServer(http.Dir("static")))
 	mux.HandleFunc("/game", serveWs)
 
 	server := &graceful.Server{
@@ -117,7 +106,7 @@ func main() {
 			return true
 		},
 		Server: &http.Server{
-			Addr:    *listenAddr,
+			Addr:    ":8080",
 			Handler: mux,
 		},
 	}

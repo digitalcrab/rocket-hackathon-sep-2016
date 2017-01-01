@@ -10,13 +10,6 @@
 #define LEFT_BIT     (4) // '0100'
 #define RIGHT_BIT    (8) // '1000'
 
-// Each command is 2 bytes in size
-struct Command
-{
-    byte direction;
-    byte speed;
-};
-
 void setup()
 {
     // Setup Pin I/O Functions
@@ -30,42 +23,42 @@ void setup()
 }
 
 // Decodes a command struct, does some error checking, and controls the Arduino pins
-void driveCar(struct Command &cmd)
+void drive(byte direction, byte speed)
 {
     // If forward and backward are both enabled, error, remove the backward bit set
-    if ((cmd.direction & FORARD_BIT) && (cmd.direction & BACKWARD_BIT)) {
-        cmd.direction -= BACKWARD_BIT;
+    if ((direction & FORARD_BIT) && (direction & BACKWARD_BIT)) {
+        direction -= BACKWARD_BIT;
     }
     
     // If left and right are both enabled, error, remove the right bit set
-    if ((cmd.direction & LEFT_BIT) && (cmd.direction & RIGHT_BIT)) {
-        cmd.direction -= RIGHT_BIT;
+    if ((direction & LEFT_BIT) && (direction & RIGHT_BIT)) {
+        direction -= RIGHT_BIT;
     }
     
     // Drive forward if enabled
-    if (cmd.direction & FORARD_BIT) {
+    if (direction & FORARD_BIT) {
         // Note: a PWM value specified in range 0 - 255, 255 = MAX
-        analogWrite(FORWARD_PIN, cmd.speed);
+        analogWrite(FORWARD_PIN, speed);
     } else {
         analogWrite(FORWARD_PIN, 0);
     }
     
     // Drive backward if enabled
-    if (cmd.direction & BACKWARD_BIT) {
-        analogWrite(BACKWARD_PIN, cmd.speed);
+    if (direction & BACKWARD_BIT) {
+        analogWrite(BACKWARD_PIN, speed);
     } else {
         analogWrite(BACKWARD_PIN, 0);
     }
     
     // Drive left if enabled
-    if (cmd.direction & LEFT_BIT) {
+    if (direction & LEFT_BIT) {
         digitalWrite(LEFT_PIN, HIGH);
     } else {
         digitalWrite(LEFT_PIN, LOW);
     }
     
     // Drive right if enabled
-    if (cmd.direction & RIGHT_BIT) {
+    if (direction & RIGHT_BIT) {
         digitalWrite(RIGHT_PIN, HIGH);
     } else {
         digitalWrite(RIGHT_PIN, LOW);
@@ -77,15 +70,8 @@ byte buf[2];
 void loop()
 {
   if (Serial.available() >= 2) {
-    int in = Serial.readBytes(buf, 2);
-    if (in == 2) {
-      Serial.println("Got 2 bytes");
-      Serial.println(buf[0], DEC);
-      Serial.println(buf[1], DEC);
-      Command cmd;
-      cmd.direction = buf[0];
-      cmd.speed = buf[1];
-      driveCar(cmd); 
+    if (Serial.readBytes(buf, 2) == 2) {
+      drive(buf[0], buf[1]);
     }
   }
 }
