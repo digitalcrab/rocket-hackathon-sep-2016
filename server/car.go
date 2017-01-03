@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/tarm/serial"
-	"math"
 )
 
 const (
