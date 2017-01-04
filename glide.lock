@@ -1,0 +1,16 @@
+hash: 2f5fbb7890194596d3bdbc0a07bc18e3a94c31f9d078e88c2ea70ad826f1c2f0
+updated: 2017-01-04T12:28:18.507337828+01:00
+imports:
+- name: github.com/gorilla/websocket
+  version: 3ab3a8b8831546bd18fd182c20687ca853b2bb13
+- name: github.com/Sirupsen/logrus
+  version: d26492970760ca5d33129d2d799e34be5c4782eb
+- name: github.com/tarm/serial
+  version: 37be519d49878d0098e34fb614136b81e6c87861
+- name: github.com/tylerb/graceful
+  version: 50a48b6e73fcc75b45e22c05b79629a67c79e938
+- name: golang.org/x/sys
+  version: 62bee037599929a6e9146f29d10dd5208c43507d
+  subpackages:
+  - unix
+testImports: []

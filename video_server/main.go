@@ -3,9 +3,8 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"flag"
-	"github.com/Sirupsen/logrus"
 	"github.com/tylerb/graceful"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -13,45 +12,31 @@ import (
 	"time"
 )
 
-var (
-	logLevel   = flag.String("log", "debug", "Logs level")
-	listenAddr = flag.String("listen", ":8088", "Listen on address")
-	stream     = NewStream()
-)
+var stream = NewStream()
 
 func main() {
-	flag.Parse()
-
-	lvl, err := logrus.ParseLevel(*logLevel)
-	if err != nil {
-		lvl = logrus.DebugLevel
-	}
-
-	logrus.SetLevel(lvl)
-	logrus.WithFields(logrus.Fields{
-		"listen": *listenAddr,
-	}).Debugln("Starting application...")
-
 	mux := http.NewServeMux()
 	mux.Handle("/", stream)
 
 	server := &graceful.Server{
 		Timeout: 10 * time.Second,
 		BeforeShutdown: func() bool {
-			logrus.Debugln("Stopping http server...")
+			log.Println("Stopping http server...")
 			return true
 		},
 		Server: &http.Server{
-			Addr:    *listenAddr,
+			Addr:    ":8081",
 			Handler: mux,
 		},
 	}
 
 	go runFF()
 
+	log.Println("Starting application 127.0.0.1:8081")
+
 	if err := server.ListenAndServe(); err != nil {
 		if opErr, ok := err.(*net.OpError); !ok || (ok && opErr.Op != "accept") {
-			logrus.WithError(err).Fatalln("Error on listen port")
+			log.Fatalln(err)
 		}
 	}
 }
@@ -75,7 +60,7 @@ func runFF() {
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		logrus.Fatalln(err)
+		log.Fatalln(err)
 	}
 
 	scanner := bufio.NewScanner(stdout)
@@ -84,13 +69,13 @@ func runFF() {
 	go func() {
 		for scanner.Scan() {
 			buf := scanner.Bytes()
-			logrus.WithField("length", len(buf)).Infoln("Received jpeg")
+			log.Printf("Received jpeg with length %d\n", len(buf))
 			stream.UpdateJPEG(buf)
 		}
 	}()
 
 	if err := cmd.Start(); err != nil {
-		logrus.Fatalln(err)
+		log.Fatalln(err)
 	}
 
 	err = cmd.Wait()

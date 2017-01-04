@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -26,7 +26,7 @@ const headerf = "\r\n" +
 
 // ServeHTTP responds to HTTP requests with the MJPEG stream, implementing the http.Handler interface.
 func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	logrus.WithField("addr", r.RemoteAddr).Infoln("Stream connected")
+	log.Printf("Stream connected %q\n", r.RemoteAddr)
 	w.Header().Add("Content-Type", "multipart/x-mixed-replace;boundary="+boundaryWord)
 
 	c := make(chan []byte)
@@ -38,7 +38,7 @@ func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(s.FrameInterval)
 		b := <-c
 		if _, err := w.Write(b); err != nil {
-			logrus.WithError(err).Errorln("Error streaming")
+			log.Println(err)
 			break
 		}
 	}
@@ -46,7 +46,7 @@ func (s *Stream) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.lock.Lock()
 	delete(s.m, c)
 	s.lock.Unlock()
-	logrus.WithField("addr", r.RemoteAddr).Infoln("Stream disconnected")
+	log.Printf("Stream disconnected %q\n", r.RemoteAddr)
 }
 
 // UpdateJPEG pushes a new JPEG frame onto the clients.

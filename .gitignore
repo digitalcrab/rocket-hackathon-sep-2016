@@ -1,7 +1,3 @@
-# IDE
 /.idea
-/rockethack.iml
-
-# Binary
-/mjpeg-server
-/game-server
+/vendor
+/*/run_server
